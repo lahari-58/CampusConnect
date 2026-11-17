@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Item | CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f1e8;
+            color: #49352b;
+        }
+
+        header {
+            background: #a64b32;
+            color: white;
+            padding: 20px 8%;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000015;
+        }
+
+        h2 {
+            color: #a64b32;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #d5c3b5;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #a64b32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #853b29;
+        }
+
+        a {
+            color: #a64b32;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>CampusConnect</h2>
+</header>
+
+<div class="container">
+
+    <h2>Report an Item</h2>
+    <p>Provide the details of the lost or found item.</p>
+
+    <!-- Sends the entered item details to the Java controller. -->
+    <form th:action="@{/save}" th:object="${item}" method="post">
+
+        <!-- Stores whether the report is Lost or Found. -->
+        <input type="hidden" th:field="*{reportType}">
+
+        <label>Item Name</label>
+        <input type="text" th:field="*{itemName}"
+               placeholder="Enter item name" required>
+
+        <label>Category</label>
+        <select th:field="*{category}" required>
+            <option value="">Select category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="ID Card">ID Card</option>
+            <option value="Books">Books</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Description</label>
+        <textarea th:field="*{description}" rows="4"
+                  placeholder="Describe the item"></textarea>
+
+        <label>Location</label>
+        <input type="text" th:field="*{location}"
+               placeholder="Where was it lost or found?" required>
+
+        <label>Date</label>
+        <input type="date" th:field="*{itemDate}" required>
+
+        <label>Contact Information</label>
+        <input type="text" th:field="*{contact}"
+               placeholder="Enter phone number or email" required>
+
+        <button type="submit">Submit Report</button>
+
+    </form>
+
+    <p style="text-align:center; margin-top:20px;">
+        <a th:href="@{/}">Back to Home</a>
+    </p>
+
+</div>
+
+</body>
+</html>

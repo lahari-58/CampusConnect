@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reports | CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f1e8;
+            color: #49352b;
+        }
+
+        header {
+            background: #a64b32;
+            color: white;
+            padding: 20px 8%;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #a64b32;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d5c3b5;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #a64b32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .item-card {
+            background: white;
+            padding: 22px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #00000010;
+        }
+
+        .type {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #f4dfad;
+            color: #70451e;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .returned {
+            color: green;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #b66b22;
+            font-weight: bold;
+        }
+
+        .return-button {
+            margin-top: 12px;
+        }
+
+        a {
+            color: #a64b32;
+            text-decoration: none;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>CampusConnect</h2>
+</header>
+
+<div class="container">
+
+    <h2>Lost & Found Reports</h2>
+    <p>View and search for reported campus items.</p>
+
+    <!-- Search form sends the keyword to the Java controller. -->
+    <form th:action="@{/search}" method="get" class="search-box">
+
+        <input type="text" name="keyword"
+               placeholder="Search item by name..."
+               th:value="${keyword}">
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <p>
+        <a th:href="@{/items}">View All Reports</a>
+        &nbsp; | &nbsp;
+        <a th:href="@{/}">Back to Home</a>
+    </p>
+
+    <!-- Displays a message when there are no reports. -->
+    <div class="empty" th:if="${#lists.isEmpty(items)}">
+        <p>No items found.</p>
+    </div>
+
+    <!-- Repeats this card for every item received from Java. -->
+    <div class="item-card" th:each="item : ${items}">
+
+        <span class="type" th:text="${item.reportType}">LOST</span>
+
+        <h3 th:text="${item.itemName}">Item Name</h3>
+
+        <p>
+            <strong>Category:</strong>
+            <span th:text="${item.category}"></span>
+        </p>
+
+        <p>
+            <strong>Description:</strong>
+            <span th:text="${item.description}"></span>
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            <span th:text="${item.location}"></span>
+        </p>
+
+        <p>
+            <strong>Date:</strong>
+            <span th:text="${item.itemDate}"></span>
+        </p>
+
+        <p>
+            <strong>Contact:</strong>
+            <span th:text="${item.contact}"></span>
+        </p>
+
+        <!-- Shows whether the item has been returned. -->
+        <p th:if="${item.returned}" class="returned">
+            Status: Returned
+        </p>
+
+        <p th:unless="${item.returned}" class="pending">
+            Status: Not Returned
+        </p>
+
+        <!-- Shows the button only when the item is not returned. -->
+        <form th:if="${!item.returned}"
+              th:action="@{/returned/{id}(id=${item.id})}"
+              method="post">
+
+            <button type="submit" class="return-button">
+                Mark as Returned
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
